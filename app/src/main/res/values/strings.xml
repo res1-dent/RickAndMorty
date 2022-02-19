@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">RickAndMorty</string>
+
+    <!--PersonsListFragment-->
+    <string name="card_transition_name">card_%1$s</string>
+    <string name="species_name">%1s - %2s</string>
+    <!--DetailsFragment-->
+    <string name="card_detail_transition_name">card_detail</string>
+
+</resources>
