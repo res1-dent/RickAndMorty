@@ -8,7 +8,6 @@ import javax.inject.Inject
 class RemoteMapper @Inject constructor() {
 
     fun toPersonList(remotePersons: List<RemotePerson>): List<Person> {
-        Timber.e("remote person = ${remotePersons.first()}")
         return remotePersons.map {
             Person(
                 id = it.id,

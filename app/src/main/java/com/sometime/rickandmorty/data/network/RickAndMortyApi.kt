@@ -1,6 +1,7 @@
 package com.sometime.rickandmorty.data.network
 
 import androidx.annotation.IntRange
+import com.sometime.rickandmorty.data.entities.RemoteEpisode
 import com.sometime.rickandmorty.data.entities.RemotePerson
 import com.sometime.rickandmorty.data.entities.RemotePersonsList
 import retrofit2.Response
@@ -19,5 +20,16 @@ interface RickAndMortyApi {
     suspend fun getPersonById(
         @Path("id") id: Int
     ): Response<RemotePerson>
+
+
+    @GET("episode/{numbers}")
+    suspend fun getSeriesList(
+        @Path("numbers")episodes: String
+    ): Response<List<RemoteEpisode>>
+
+    @GET("episode/{number}")
+    suspend fun getSeries(
+        @Path("number")episodes: String
+    ): Response<RemoteEpisode>
 
 }

@@ -1,5 +1,6 @@
 package com.sometime.rickandmorty.domain.interactors
 
+import com.sometime.rickandmorty.data.entities.RemoteEpisode
 import com.sometime.rickandmorty.domain.entities.Person
 import com.sometime.rickandmorty.domain.repositories.NetworkRepository
 import com.sometime.rickandmorty.domain.usecases.GetPersonUseCase
@@ -9,8 +10,8 @@ class GetPersonUseCaseImpl @Inject constructor(
     private val repository: NetworkRepository
 ) : GetPersonUseCase {
 
-    override suspend fun invoke(id: Int): Result<Person> {
-        return repository.fetchPersonById(id = id)
+    override suspend fun invoke(id: Int): Pair<Result<Person>, Result<List<RemoteEpisode>>> {
+        return repository.fetchPersonInfoById(id = id)
     }
 
 }
