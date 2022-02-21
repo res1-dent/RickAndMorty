@@ -29,6 +29,12 @@ class EpisodeDataAdapterDelegate(
         private val onEpisodeClicked: (id: Int, view: View) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        init {
+            binding.root.setOnClickListener {
+
+            }
+        }
+
         fun bind(item: Episode.EpisodeData) {
             binding.episodeName.text = item.name
             binding.airDate.text = item.air_date

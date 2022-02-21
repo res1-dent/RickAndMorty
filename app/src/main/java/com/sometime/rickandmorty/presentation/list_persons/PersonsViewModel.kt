@@ -9,9 +9,9 @@ import androidx.paging.cachedIn
 import com.sometime.rickandmorty.domain.entities.Person
 import com.sometime.rickandmorty.domain.usecases.SetPersonsListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,13 +19,29 @@ class PersonsViewModel @Inject constructor(
     private val setPersonsUseCase: SetPersonsListUseCase,
 ) : ViewModel() {
 
+    private var nameQuery: String? = null
 
-    val listOfPersons: StateFlow<PagingData<Person>> =
-        Pager(PagingConfig(20, prefetchDistance = 3)) { setPersonsUseCase() }.flow.cachedIn(
+    val listOfPersons: SharedFlow<PagingData<Person>> =
+        Pager(PagingConfig(20, prefetchDistance = 3))
+        {
+            setPersonsUseCase(nameQuery)
+        }.flow.cachedIn(
             viewModelScope
         ).stateIn(
             viewModelScope,
             SharingStarted.Lazily,
             PagingData.empty()
         )
+
+    @FlowPreview
+    @ExperimentalCoroutinesApi
+    fun bind(nameFlow: Flow<String>, callback: () -> Unit) {
+          nameFlow
+                .debounce(200)
+                .distinctUntilChanged()
+                .mapLatest {
+                nameQuery = it
+                callback()
+            }.launchIn(viewModelScope)
+    }
 }

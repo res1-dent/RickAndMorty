@@ -18,9 +18,12 @@ import com.sometime.rickandmorty.R
 import com.sometime.rickandmorty.databinding.FragmentPersonsBinding
 import com.sometime.rickandmorty.presentation.adapter.LoadedStateAdapter
 import com.sometime.rickandmorty.presentation.adapter.PagingAdapter
+import com.sometime.rickandmorty.presentation.details.adapter.animations.SlideInDownAnimator
 import com.sometime.rickandmorty.utils.autoCleared
+import com.sometime.rickandmorty.utils.textChangedFlow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import retrofit2.HttpException
 import timber.log.Timber
 
 
@@ -47,6 +50,9 @@ class PersonsFragment : Fragment(R.layout.fragment_persons) {
 
     private fun observeViewModelState() {
         lifecycleScope.launchWhenCreated {
+            viewModel.bind(binding.queryEditText.textChangedFlow()) {
+                adapter.refresh()
+            }
             viewModel.listOfPersons.collectLatest { person ->
                 adapter.submitData(person)
             }
@@ -56,16 +62,16 @@ class PersonsFragment : Fragment(R.layout.fragment_persons) {
     private fun initList() {
         adapter = PagingAdapter(::goToDetails).apply {
             addLoadStateListener { state ->
-                //Timber.e("state = $state")
                 val refreshState = state.refresh
                 binding.personsRecyclerView.isVisible = refreshState != LoadState.Loading
                 binding.progress.isVisible = refreshState == LoadState.Loading
-                if (refreshState is LoadState.Error || state.append is LoadState.Error) {
-                    Snackbar.make(
-                        binding.root,
-                        "Error loading persons",
-                        Snackbar.LENGTH_LONG
-                    ).show()
+                if (refreshState is LoadState.Error) {
+                    val exception = refreshState.error as? HttpException
+                    val message =
+                        if (exception?.code() == 404) "No persons found" else refreshState.error.localizedMessage
+                    Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+                        .setAction("Retry") { adapter.refresh() }
+                        .show()
                 }
             }
         }
@@ -73,6 +79,7 @@ class PersonsFragment : Fragment(R.layout.fragment_persons) {
             header = LoadedStateAdapter(),
             footer = LoadedStateAdapter()
         )
+        binding.personsRecyclerView.itemAnimator = SlideInDownAnimator()
     }
 
     private fun goToDetails(id: Int, view: View) {

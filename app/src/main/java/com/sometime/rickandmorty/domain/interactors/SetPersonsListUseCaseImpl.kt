@@ -9,7 +9,7 @@ import javax.inject.Inject
 class SetPersonsListUseCaseImpl @Inject constructor(
     private val getPersonsListUseCase: GetPersonsListUseCase,
 ) : SetPersonsListUseCase {
-    override operator fun invoke(): PagingSource<Int, Person> {
-        return getPersonsListUseCase.invoke()
+    override operator fun invoke(query : String?): PagingSource<Int, Person> {
+        return getPersonsListUseCase.invoke(query)
     }
 }

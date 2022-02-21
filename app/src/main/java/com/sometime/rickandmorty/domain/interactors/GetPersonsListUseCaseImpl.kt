@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetPersonsListUseCaseImpl @Inject constructor(
     private val repository: NetworkRepository
 ) : GetPersonsListUseCase {
-    override fun invoke(): PagingSource<Int, Person> {
-        return repository()
+    override fun invoke(query: String?): PagingSource<Int, Person> {
+        return repository(query)
     }
 }

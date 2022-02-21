@@ -12,7 +12,7 @@ import retrofit2.http.Query
 interface RickAndMortyApi {
     @GET("character")
     suspend fun getCharacters(
-        @Query("q") query: String? = null,
+        @Query("name") name: String? = null,
         @Query("page") @IntRange(from = 1) page: Int? = 1,
     ): Response<RemotePersonsList>
 

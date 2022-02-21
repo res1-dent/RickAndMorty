@@ -6,7 +6,7 @@ import com.sometime.rickandmorty.domain.entities.Person
 
 interface NetworkRepository {
 
-    operator fun invoke(): PagingSource<Int, Person>
+    operator fun invoke(query: String?): PagingSource<Int, Person>
 
     suspend fun fetchPersonById(id: Int): Result<Person>
 
