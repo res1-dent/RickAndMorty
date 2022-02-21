@@ -39,7 +39,7 @@ class PersonsViewModel @Inject constructor(
           nameFlow
                 .debounce(200)
                 .distinctUntilChanged()
-                .mapLatest {
+                .onEach {
                 nameQuery = it
                 callback()
             }.launchIn(viewModelScope)
