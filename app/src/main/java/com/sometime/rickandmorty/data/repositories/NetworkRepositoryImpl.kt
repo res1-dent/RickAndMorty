@@ -5,7 +5,6 @@ import androidx.paging.PagingSource
 import com.sometime.rickandmorty.data.entities.RemoteEpisode
 import com.sometime.rickandmorty.data.mappers.RemoteMapper
 import com.sometime.rickandmorty.data.network.RickAndMortyApi
-import com.sometime.rickandmorty.data.network.RickAndMortyPageSource
 import com.sometime.rickandmorty.domain.entities.Person
 import com.sometime.rickandmorty.domain.repositories.NetworkRepository
 import retrofit2.HttpException
@@ -13,15 +12,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class NetworkRepositoryImpl @Inject constructor(
-    private val pagingSource: RickAndMortyPageSource,
+    private val pagingSource: RickAndMortyPageSource.RickAndMortyPageSourceFactory,
     private val rickAndMortyApi: RickAndMortyApi,
     private val mapper: RemoteMapper
 ) : NetworkRepository {
 
     override fun invoke(query: String?): PagingSource<Int, Person> {
-        val pagingString = RickAndMortyPageSource(rickAndMortyApi, mapper)
-        pagingString.setQuery(query)
-        return pagingString
+        return pagingSource.create(query?:"")
     }
 
     override suspend fun fetchPersonById(id: Int): Result<Person> {

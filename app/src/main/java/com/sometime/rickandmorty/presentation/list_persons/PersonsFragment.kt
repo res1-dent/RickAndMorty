@@ -18,7 +18,6 @@ import com.sometime.rickandmorty.R
 import com.sometime.rickandmorty.databinding.FragmentPersonsBinding
 import com.sometime.rickandmorty.presentation.adapter.LoadedStateAdapter
 import com.sometime.rickandmorty.presentation.adapter.PagingAdapter
-import com.sometime.rickandmorty.presentation.details.adapter.animations.SlideInDownAnimator
 import com.sometime.rickandmorty.utils.autoCleared
 import com.sometime.rickandmorty.utils.textChangedFlow
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,18 +42,22 @@ class PersonsFragment : Fragment(R.layout.fragment_persons) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition() }
         initList()
         observeViewModelState()
+        view.doOnPreDraw {
+            binding.personsRecyclerView.doOnPreDraw {
+                startPostponedEnterTransition()
+            }
+        }
     }
 
     private fun observeViewModelState() {
         lifecycleScope.launchWhenCreated {
-            viewModel.bind(binding.queryEditText.textChangedFlow()) {
-                adapter.refresh()
-            }
-            viewModel.listOfPersons.collectLatest { person ->
-                adapter.submitData(person)
+            viewModel.bind(binding.queryEditText.textChangedFlow())
+            viewModel.persons.collectLatest {
+                Timber.e("collectLatest")
+                adapter.submitData(it)
+                startPostponedEnterTransition()
             }
         }
     }
@@ -79,11 +82,9 @@ class PersonsFragment : Fragment(R.layout.fragment_persons) {
             header = LoadedStateAdapter(),
             footer = LoadedStateAdapter()
         )
-        binding.personsRecyclerView.itemAnimator = SlideInDownAnimator()
     }
 
     private fun goToDetails(id: Int, view: View) {
-        Timber.e("transition name = ${view.transitionName}")
         val extras =
             FragmentNavigatorExtras(view to resources.getString(R.string.card_detail_transition_name))
         exitTransition = MaterialElevationScale(false).apply {

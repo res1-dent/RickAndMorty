@@ -1,7 +1,7 @@
 package com.sometime.rickandmorty.di
 
 import androidx.paging.PagingSource
-import com.sometime.rickandmorty.data.network.RickAndMortyPageSource
+import com.sometime.rickandmorty.data.repositories.RickAndMortyPageSource
 import com.sometime.rickandmorty.data.repositories.NetworkRepositoryImpl
 import com.sometime.rickandmorty.domain.entities.Person
 import com.sometime.rickandmorty.domain.repositories.NetworkRepository
@@ -16,8 +16,6 @@ import dagger.hilt.android.components.ViewModelComponent
 abstract class RepositoryModule {
 
     @Binds
-    abstract fun providesPagingSource(impl: RickAndMortyPageSource): PagingSource<Int, Person>
-
-    @Binds
     abstract fun providesNetworkRepository(impl: NetworkRepositoryImpl): NetworkRepository
+
 }

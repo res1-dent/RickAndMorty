@@ -35,7 +35,6 @@ class DetailsViewModel @Inject constructor(
                 _personStateFlow.value = person.first.getOrNull()
             if (person.second.isSuccess) {
                 val episodes =  person.second.getOrDefault(emptyList())
-                Timber.e("episode in viewModels = $episodes")
                 _episodesStateFlow.value = episodes
             }
         }

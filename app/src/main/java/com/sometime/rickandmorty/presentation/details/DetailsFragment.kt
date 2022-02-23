@@ -83,7 +83,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
             }
         }
         viewModel.episodes.observe(viewLifecycleOwner) {
-            Timber.e("episode in fragment = $it")
             setEpisodesList(it)
         }
     }

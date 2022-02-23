@@ -1,25 +1,21 @@
-package com.sometime.rickandmorty.data.network
+package com.sometime.rickandmorty.data.repositories
 
-import android.app.DownloadManager
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sometime.rickandmorty.data.mappers.RemoteMapper
+import com.sometime.rickandmorty.data.network.RickAndMortyApi
 import com.sometime.rickandmorty.domain.entities.Person
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import retrofit2.HttpException
 import timber.log.Timber
-import javax.inject.Inject
 
-class RickAndMortyPageSource @Inject constructor(
+class RickAndMortyPageSource @AssistedInject constructor(
     private val api: RickAndMortyApi,
     private val mapper: RemoteMapper,
+    @Assisted ("query") private val query: String?
 ) : PagingSource<Int, Person>() {
-
-    private var query: String? = null
-
-    fun setQuery(query: String?){
-        this@RickAndMortyPageSource.query = query
-    }
 
     override fun getRefreshKey(state: PagingState<Int, Person>): Int? {
         val anchorPosition = state.anchorPosition ?: return null
@@ -35,7 +31,8 @@ class RickAndMortyPageSource @Inject constructor(
             if (response.isSuccessful) {
                 val persons =
                     checkNotNull(response.body()).results.let { mapper.toPersonList(it) }
-                val nextKey: Int? = response.body()?.info?.next?.takeLastWhile { it!='=' }?.toIntOrNull()
+                val nextKey: Int? =
+                    response.body()?.info?.next?.takeLastWhile { it != '=' }?.toIntOrNull()
                 //if (persons.size < pageSize) null else page + 1
                 val prevKey = if (page == 1) null else page - 1
                 LoadResult.Page(persons, prevKey, nextKey)
@@ -48,5 +45,10 @@ class RickAndMortyPageSource @Inject constructor(
         }
 
     }
-
+    @AssistedFactory
+    interface RickAndMortyPageSourceFactory {
+        fun create(@Assisted("query") query: String): RickAndMortyPageSource
+    }
 }
+
+
