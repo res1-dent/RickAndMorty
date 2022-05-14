@@ -2,8 +2,8 @@ package com.sometime.rickandmorty.data.repositories
 
 
 import androidx.paging.PagingSource
-import com.sometime.rickandmorty.data.entities.RemoteEpisode
-import com.sometime.rickandmorty.data.mappers.RemoteMapper
+import com.sometime.rickandmorty.data.entities.RemoteEpisodeData
+import com.sometime.rickandmorty.data.mappers.toPerson
 import com.sometime.rickandmorty.data.network.RickAndMortyApi
 import com.sometime.rickandmorty.domain.entities.Person
 import com.sometime.rickandmorty.domain.repositories.NetworkRepository
@@ -14,7 +14,6 @@ import javax.inject.Inject
 class NetworkRepositoryImpl @Inject constructor(
     private val pagingSource: RickAndMortyPageSource.RickAndMortyPageSourceFactory,
     private val rickAndMortyApi: RickAndMortyApi,
-    private val mapper: RemoteMapper
 ) : NetworkRepository {
 
     override fun invoke(query: String?): PagingSource<Int, Person> {
@@ -26,19 +25,19 @@ class NetworkRepositoryImpl @Inject constructor(
         return if (personResponse.isSuccessful) {
             Timber.e("person = ${personResponse.body()}")
             fetchEpisodes(checkNotNull(personResponse.body()?.episode))
-            val remotePerson = checkNotNull(personResponse.body()).let { mapper.toPerson(it) }
+            val remotePerson = checkNotNull(personResponse.body()).toPerson()
             Result.success(remotePerson)
         } else {
             Result.failure(HttpException(personResponse))
         }
     }
 
-    override suspend fun fetchPersonInfoById(id: Int): Pair<Result<Person>, Result<List<RemoteEpisode>>> {
+    override suspend fun fetchPersonInfoById(id: Int): Pair<Result<Person>, Result<List<RemoteEpisodeData>>> {
         val personResponse = rickAndMortyApi.getPersonById(id)
         return if (personResponse.isSuccessful) {
             Timber.e("person = ${personResponse.body()}")
             val episodes = fetchEpisodes(checkNotNull(personResponse.body()?.episode))
-            val remotePerson = checkNotNull(personResponse.body()).let { mapper.toPerson(it) }
+            val remotePerson = checkNotNull(personResponse.body()).toPerson()
             Pair(Result.success(remotePerson), episodes)
         } else {
             Pair(
@@ -49,7 +48,7 @@ class NetworkRepositoryImpl @Inject constructor(
     }
 
     //TODO: optimize this crutch
-    private suspend fun fetchEpisodes(episodesList: List<String>): Result<List<RemoteEpisode>> {
+    override suspend fun fetchEpisodes(episodesList: List<String>): Result<List<RemoteEpisodeData>> {
         if (episodesList.size > 1) {
             val episodesNumbers = episodesList.joinToString(",") { it.takeLastWhile { it != '/' } }
             val episodesResponse = rickAndMortyApi.getSeriesList(episodesNumbers)

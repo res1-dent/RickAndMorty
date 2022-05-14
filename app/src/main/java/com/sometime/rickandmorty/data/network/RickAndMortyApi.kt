@@ -1,7 +1,8 @@
 package com.sometime.rickandmorty.data.network
 
 import androidx.annotation.IntRange
-import com.sometime.rickandmorty.data.entities.RemoteEpisode
+import com.sometime.rickandmorty.data.entities.RemoteEpisodeData
+import com.sometime.rickandmorty.data.entities.RemoteEpisodesData
 import com.sometime.rickandmorty.data.entities.RemotePerson
 import com.sometime.rickandmorty.data.entities.RemotePersonsList
 import retrofit2.Response
@@ -24,12 +25,23 @@ interface RickAndMortyApi {
 
     @GET("episode/{numbers}")
     suspend fun getSeriesList(
-        @Path("numbers")episodes: String
-    ): Response<List<RemoteEpisode>>
+        @Path("numbers") episodes: String
+    ): Response<List<RemoteEpisodeData>>
 
     @GET("episode/{number}")
     suspend fun getSeries(
-        @Path("number")episodes: String
-    ): Response<RemoteEpisode>
+        @Path("number") episodes: String
+    ): Response<RemoteEpisodeData>
+
+    @GET("episode")
+    suspend fun getAllSeries(
+        @Query("page") page: Int?
+    ): RemoteEpisodesData
+
+    @GET("character/{characters}")
+    suspend fun getEpisodeCharacters(
+        @Path("characters") characters: String
+    ): List<RemotePerson>
+
 
 }

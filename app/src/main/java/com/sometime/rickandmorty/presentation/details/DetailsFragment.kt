@@ -2,19 +2,29 @@ package com.sometime.rickandmorty.presentation.details
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFade
+import com.google.android.material.transition.platform.MaterialArcMotion
 import com.sometime.rickandmorty.R
 import com.sometime.rickandmorty.databinding.FragmentDetailsBinding
 import com.sometime.rickandmorty.domain.entities.Episode
@@ -40,6 +50,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enterTransition = MaterialElevationScale(false)
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             drawingViewId = R.id.fragmentContainerView
             duration = 400.toLong()
@@ -49,6 +60,12 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw {
+            binding.episodesRecycler.doOnPreDraw {
+                startPostponedEnterTransition()
+            }
+        }
         viewModel.getPersonInfo(args.personId)
         observeViewModelState()
         initList()
@@ -69,11 +86,24 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     }
 
     private fun initList() {
-        adapter = EpisodeAdapter() { _, _ -> }
+        adapter = EpisodeAdapter(::navigateToEpisodeFragment)
         with(binding.episodesRecycler) {
             adapter = this@DetailsFragment.adapter
             itemAnimator = SlideInDownAnimator()
         }
+    }
+
+    private fun navigateToEpisodeFragment(episodeData: Episode.EpisodeData, view: View) {
+        val extras =
+            FragmentNavigatorExtras(view to resources.getString(R.string.episode_detail_transition_name))
+        exitTransition = MaterialElevationScale(false).apply {
+            duration = 400.toLong()
+        }
+        reenterTransition = MaterialElevationScale(true).apply {
+            duration = 400.toLong()
+        }
+        val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodeFragment(episodeData)
+        findNavController().navigate(action,extras)
     }
 
     private fun observeViewModelState() {
@@ -94,7 +124,30 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     private fun setData(it: Person) {
         binding.nameTextView.text = it.name
         val shimmer = getShimmer()
-        Glide.with(requireView()).load(it.image).placeholder(shimmer).error(shimmer)
+        Glide.with(requireView()).load(it.image).placeholder(shimmer).error(shimmer).addListener(
+            object : RequestListener<Drawable>{
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+
+                    binding.chip.isVisible = true
+                    return false
+                }
+
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                   return false
+                }
+
+            })
             .into(binding.avatarImageView)
         Glide.with(requireView()).load(it.image).circleCrop().into(binding.avatarImageViewSmall)
         binding.chip.text = binding.root.resources.getString(
@@ -107,6 +160,5 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
             "Dead" -> ColorStateList.valueOf(Color.RED)
             else -> ColorStateList.valueOf(Color.BLUE)
         }
-        binding.chip.isVisible = true
     }
 }

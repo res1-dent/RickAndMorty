@@ -9,18 +9,54 @@
         android:id="@+id/mainFragment"
         android:name="com.sometime.rickandmorty.presentation.list_persons.PersonsFragment"
         android:label="MainFragment"
-        tools:layout="@layout/fragment_persons" >
+        tools:layout="@layout/fragment_persons">
         <action
+            app:launchSingleTop="true"
             android:id="@+id/action_mainFragment_to_detailsFragment"
             app:destination="@id/detailsFragment" />
     </fragment>
     <fragment
-        tools:layout="@layout/fragment_details"
         android:id="@+id/detailsFragment"
         android:name="com.sometime.rickandmorty.presentation.details.DetailsFragment"
-        android:label="DetailsFragment" >
+        android:label="DetailsFragment"
+        tools:layout="@layout/fragment_details">
         <argument
             android:name="personId"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_detailsFragment_to_episodeFragment"
+            app:destination="@id/episodeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/episodeFragment"
+        android:name="com.sometime.rickandmorty.presentation.episode.EpisodeFragment"
+        android:label="EpisodeFragment"
+        tools:layout="@layout/fragment_episode">
+        <argument
+            android:name="episode"
+            app:argType="com.sometime.rickandmorty.domain.entities.Episode$EpisodeData" />
+        <action
+            android:id="@+id/action_episodeFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/detailsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_episodes"
+        android:id="@+id/episodesFragment"
+        android:name="com.sometime.rickandmorty.presentation.episodes.EpisodesFragment"
+        android:label="EpisodesFragment" >
+        <action
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/episodeFragment"
+            android:id="@+id/action_episodesFragment_to_episodeFragment"
+            app:destination="@id/episodeFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_favourites"
+        android:id="@+id/favouritesFragment"
+        android:name="com.sometime.rickandmorty.presentation.favourites.FavouritesFragment"
+        android:label="FavouritesFragment" />
+
 </navigation>

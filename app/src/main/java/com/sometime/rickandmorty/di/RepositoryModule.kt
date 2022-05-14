@@ -1,9 +1,10 @@
 package com.sometime.rickandmorty.di
 
-import androidx.paging.PagingSource
-import com.sometime.rickandmorty.data.repositories.RickAndMortyPageSource
+import com.sometime.rickandmorty.data.repositories.CharacterRepositoryImpl
+import com.sometime.rickandmorty.data.repositories.EpisodesRepositoryImpl
 import com.sometime.rickandmorty.data.repositories.NetworkRepositoryImpl
-import com.sometime.rickandmorty.domain.entities.Person
+import com.sometime.rickandmorty.domain.repositories.CharacterRepository
+import com.sometime.rickandmorty.domain.repositories.EpisodesRepository
 import com.sometime.rickandmorty.domain.repositories.NetworkRepository
 import dagger.Binds
 import dagger.Module
@@ -17,5 +18,11 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun providesNetworkRepository(impl: NetworkRepositoryImpl): NetworkRepository
+
+    @Binds
+    abstract fun providesCharacterRepository(impl:CharacterRepositoryImpl): CharacterRepository
+
+    @Binds
+    abstract fun providesEpisodesRepository(impl:EpisodesRepositoryImpl): EpisodesRepository
 
 }

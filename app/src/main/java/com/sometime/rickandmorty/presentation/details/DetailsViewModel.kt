@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sometime.rickandmorty.data.entities.RemoteEpisode
 import com.sometime.rickandmorty.domain.entities.Episode
 import com.sometime.rickandmorty.domain.entities.Person
 import com.sometime.rickandmorty.domain.usecases.SetPersonUseCase
@@ -12,7 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel

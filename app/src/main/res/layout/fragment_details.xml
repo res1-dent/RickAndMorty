@@ -5,6 +5,7 @@
     android:id="@id/cardView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="@color/dark_grey"
     android:orientation="vertical"
     android:transitionName="@string/card_detail_transition_name">
 
@@ -47,6 +48,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/dark_grey"
                 android:orientation="vertical">
 
                 <ImageView

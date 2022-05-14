@@ -3,11 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/RickAndMorty/app/src/main/res/drawable/ic_characters_svgrepo_com.xml" value="0.311" />
+        <entry key="..\:/RickAndMorty/app/src/main/res/drawable/ic_person.xml" value="0.311" />
+        <entry key="..\:/RickAndMorty/app/src/main/res/drawable/ic_persons.xml" value="0.311" />
+        <entry key="..\:/RickAndMorty/app/src/main/res/drawable/ic_series.xml" value="0.311" />
+        <entry key="..\:/RickAndMorty/app/src/main/res/drawable/item_menu_characters.xml" value="0.311" />
+        <entry key="..\:/RickAndMorty/app/src/main/res/layout/activity_main.xml" value="0.33177083333333335" />
         <entry key="..\:/RickAndMorty/app/src/main/res/layout/fragment_details.xml" value="0.33177083333333335" />
+        <entry key="..\:/RickAndMorty/app/src/main/res/layout/fragment_episode.xml" value="0.3307291666666667" />
+        <entry key="..\:/RickAndMorty/app/src/main/res/layout/fragment_episodes.xml" value="0.3307291666666667" />
+        <entry key="..\:/RickAndMorty/app/src/main/res/layout/fragment_favourites.xml" value="0.3307291666666667" />
         <entry key="..\:/RickAndMorty/app/src/main/res/layout/fragment_persons.xml" value="0.33177083333333335" />
         <entry key="..\:/RickAndMorty/app/src/main/res/layout/item_list_episodes.xml" value="0.33177083333333335" />
-        <entry key="..\:/RickAndMorty/app/src/main/res/layout/list_item_person.xml" value="0.33177083333333335" />
+        <entry key="..\:/RickAndMorty/app/src/main/res/layout/item_loading.xml" value="0.33177083333333335" />
+        <entry key="..\:/RickAndMorty/app/src/main/res/layout/list_item_person.xml" value="1.0" />
+        <entry key="..\:/RickAndMorty/app/src/main/res/layout/menu_layout.xml" value="0.3307291666666667" />
         <entry key="..\:/RickAndMorty/app/src/main/res/layout/season_number_item_list.xml" value="0.33177083333333335" />
+        <entry key="..\:/RickAndMorty/app/src/main/res/menu/menu.xml" value="0.3307291666666667" />
         <entry key="..\:/RickAndMortyCharacters/app/src/main/res/drawable/circle.xml" value="0.263" />
         <entry key="..\:/RickAndMortyCharacters/app/src/main/res/layout/fragment_details.xml" value="0.33177083333333335" />
         <entry key="..\:/RickAndMortyCharacters/app/src/main/res/layout/item_loading.xml" value="0.33177083333333335" />

@@ -78,7 +78,7 @@ class PagingAdapter(
         )
     }
 
-    companion object {
+     companion object {
         fun getShimmer(): ShimmerDrawable {
             val shimmer =
                 Shimmer.AlphaHighlightBuilder()// The attributes for a ShimmerDrawable is set by this builder

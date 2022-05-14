@@ -2,25 +2,25 @@ package com.sometime.rickandmorty.domain.interactors
 
 import com.sometime.rickandmorty.data.entities.RemoteEpisodeData
 import com.sometime.rickandmorty.domain.entities.Episode
-import com.sometime.rickandmorty.domain.entities.Person
 import com.sometime.rickandmorty.domain.mappers.toEpisodeData
-import com.sometime.rickandmorty.domain.usecases.GetPersonUseCase
-import com.sometime.rickandmorty.domain.usecases.SetPersonUseCase
+import com.sometime.rickandmorty.domain.repositories.EpisodesRepository
+import com.sometime.rickandmorty.domain.usecases.GetEpisodesUseCase
+import retrofit2.HttpException
 import timber.log.Timber
+import java.lang.Exception
 import javax.inject.Inject
 
-class SetPersonUseCaseImpl @Inject constructor(
-    private val getPersonUseCase: GetPersonUseCase,
-) : SetPersonUseCase {
+class GetEpisodesUseCaseImpl @Inject constructor(
+    private val repository: EpisodesRepository
+): GetEpisodesUseCase {
 
-    override suspend fun invoke(id: Int): Pair<Result<Person>, Result<List<Episode>>> {
-        val result = getPersonUseCase(id)
-        val episodes: Result<List<Episode>> = if (result.second.isSuccess) {
-            Result.success(getEpisodesList(checkNotNull(result.second).getOrNull()))
+    override suspend fun getEpisodes(): Result<List<Episode>> {
+      val result = repository.fetchEpisodes()
+        return if (result.isNotEmpty()) {
+            Result.success(getEpisodesList(result))
         } else {
-            Result.failure(result.second.exceptionOrNull() ?: Throwable())
+            Result.failure(Exception("Error"))
         }
-        return Pair(result.first, episodes)
     }
 
 

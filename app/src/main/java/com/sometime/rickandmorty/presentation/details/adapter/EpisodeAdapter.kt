@@ -9,7 +9,7 @@ import com.sometime.rickandmorty.presentation.details.adapter.delegates.SeasonAd
 
 
 class EpisodeAdapter(
-    onEpisodeClicked: (id: Int, view: View) -> Unit
+    onEpisodeClicked: (Episode.EpisodeData, view: View) -> Unit
 ) : AsyncListDifferDelegationAdapter<Episode>(EpisodeDiffUtilCallback()) {
 
     init {

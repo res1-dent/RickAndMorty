@@ -1,13 +1,7 @@
 package com.sometime.rickandmorty.di
 
-import com.sometime.rickandmorty.domain.interactors.GetPersonUseCaseImpl
-import com.sometime.rickandmorty.domain.interactors.GetPersonsListUseCaseImpl
-import com.sometime.rickandmorty.domain.interactors.SetPersonUseCaseImpl
-import com.sometime.rickandmorty.domain.interactors.SetPersonsListUseCaseImpl
-import com.sometime.rickandmorty.domain.usecases.GetPersonUseCase
-import com.sometime.rickandmorty.domain.usecases.GetPersonsListUseCase
-import com.sometime.rickandmorty.domain.usecases.SetPersonUseCase
-import com.sometime.rickandmorty.domain.usecases.SetPersonsListUseCase
+import com.sometime.rickandmorty.domain.interactors.*
+import com.sometime.rickandmorty.domain.usecases.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -29,4 +23,10 @@ abstract class UseCaseModule {
 
     @Binds
     abstract fun providesSetPersonUseCase(impl: SetPersonUseCaseImpl): SetPersonUseCase
+
+    @Binds
+    abstract fun providesGetEpisodeCharactersUseCase(impl: GetEpisodeCharactersUseCaseImpl): GetEpisodeCharactersUseCase
+
+    @Binds
+    abstract fun providesGetEpisodesUseCase(impl: GetEpisodesUseCaseImpl): GetEpisodesUseCase
 }

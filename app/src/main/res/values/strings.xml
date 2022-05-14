@@ -6,6 +6,7 @@
     <string name="species_name">%1s - %2s</string>
     <!--DetailsFragment-->
     <string name="card_detail_transition_name">card_detail</string>
+    <string name="episode_detail_transition_name">episode_detail</string>
     <string name="season_number">Season %d</string>
 
 </resources>

@@ -2,7 +2,7 @@ package com.sometime.rickandmorty.data.repositories
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.sometime.rickandmorty.data.mappers.RemoteMapper
+import com.sometime.rickandmorty.data.mappers.toPerson
 import com.sometime.rickandmorty.data.network.RickAndMortyApi
 import com.sometime.rickandmorty.domain.entities.Person
 import dagger.assisted.Assisted
@@ -13,7 +13,6 @@ import timber.log.Timber
 
 class RickAndMortyPageSource @AssistedInject constructor(
     private val api: RickAndMortyApi,
-    private val mapper: RemoteMapper,
     @Assisted ("query") private val query: String?
 ) : PagingSource<Int, Person>() {
 
@@ -30,7 +29,7 @@ class RickAndMortyPageSource @AssistedInject constructor(
             val response = api.getCharacters(page = if (page == 1) null else page, name = query)
             if (response.isSuccessful) {
                 val persons =
-                    checkNotNull(response.body()).results.let { mapper.toPersonList(it) }
+                    checkNotNull(response.body()).results.let { list -> list.map { it.toPerson() } }
                 val nextKey: Int? =
                     response.body()?.info?.next?.takeLastWhile { it != '=' }?.toIntOrNull()
                 //if (persons.size < pageSize) null else page + 1

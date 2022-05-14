@@ -18,6 +18,7 @@ import com.sometime.rickandmorty.R
 import com.sometime.rickandmorty.databinding.FragmentPersonsBinding
 import com.sometime.rickandmorty.presentation.adapter.LoadedStateAdapter
 import com.sometime.rickandmorty.presentation.adapter.PagingAdapter
+import com.sometime.rickandmorty.presentation.main.BottomBarController
 import com.sometime.rickandmorty.utils.autoCleared
 import com.sometime.rickandmorty.utils.textChangedFlow
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,6 +42,7 @@ class PersonsFragment : Fragment(R.layout.fragment_persons) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as BottomBarController).toggleBottomBar(true)
         postponeEnterTransition()
         initList()
         observeViewModelState()
@@ -57,7 +59,7 @@ class PersonsFragment : Fragment(R.layout.fragment_persons) {
             viewModel.persons.collectLatest {
                 Timber.e("collectLatest")
                 adapter.submitData(it)
-                startPostponedEnterTransition()
+               // startPostponedEnterTransition()
             }
         }
     }
@@ -85,6 +87,7 @@ class PersonsFragment : Fragment(R.layout.fragment_persons) {
     }
 
     private fun goToDetails(id: Int, view: View) {
+        (requireActivity() as BottomBarController).toggleBottomBar(false)
         val extras =
             FragmentNavigatorExtras(view to resources.getString(R.string.card_detail_transition_name))
         exitTransition = MaterialElevationScale(false).apply {
